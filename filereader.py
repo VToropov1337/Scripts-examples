@@ -1,5 +1,8 @@
 import sys
 
+
+
+
 class FileReader:
 
     def __init__(self, arg):
@@ -13,8 +16,8 @@ class FileReader:
             return "Отсутствует файл для чтения по адресу : {}".format(self.arg)
         except IsADirectoryError:
             return "Указана только директория. Укажите полный путь до файла."
-
-
+        except IndexError:
+            print("Отсутствует путь до файла для чтения")
 
 
 try:
