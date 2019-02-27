@@ -21,7 +21,7 @@ def get_count_pages(html):
 
 def write_csv(data):
     with open('avito.csv', 'a') as f:
-        writer = csv.writer(f,delimiter=';')
+        writer = csv.writer(f, delimiter=';')
 
         writer.writerow((data['title'],
                          data['url'],
@@ -65,7 +65,6 @@ def get_data_from_page(html, query):
 
 
 def main():
-
     url = 'https://www.avito.ru/moskva/odezhda_obuv_aksessuary?q=patagonia'
     base_url = 'https://www.avito.ru/moskva/odezhda_obuv_aksessuary?'
     page = 'p='
@@ -82,8 +81,7 @@ def main():
 if __name__ == '__main__':
     main()
 
-
-with open ('avito.csv','r') as f:
+with open('avito.csv', 'r') as f:
     reader = csv.reader(f)
     for row in reader:
         print(row)
