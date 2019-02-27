@@ -1,0 +1,58 @@
+{
+  "ok": true,
+  "result": [
+    {
+      "update_id": 813247778,
+      "message": {
+        "message_id": 1,
+        "from": {
+          "id": 184797,
+          "is_bot": false,
+          "first_name": "Vladimir",
+          "last_name": "Toropov",
+          "username": "vladimirtoropov",
+          "language_code": "ru"
+        },
+        "chat": {
+          "id": 184797,
+          "first_name": "Vladimir",
+          "last_name": "Toropov",
+          "username": "vladimirtoropov",
+          "type": "private"
+        },
+        "date": 1551264121,
+        "text": "/start",
+        "entities": [
+          {
+            "offset": 0,
+            "length": 6,
+            "type": "bot_command"
+          }
+        ]
+      }
+    },
+    {
+      "update_id": 813247779,
+      "message": {
+        "message_id": 3,
+        "from": {
+          "id": 184797,
+          "is_bot": false,
+          "first_name": "Vladimir",
+          "last_name": "Toropov",
+          "username": "vladimirtoropov",
+          "language_code": "ru"
+        },
+        "chat": {
+          "id": 184797,
+          "first_name": "Vladimir",
+          "last_name": "Toropov",
+          "username": "vladimirtoropov",
+          "type": "private"
+        },
+        "date": 1551270178,
+        "text": "привет"
+      }
+    }
+  ]
+}
