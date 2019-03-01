@@ -9,6 +9,9 @@ proxies = {
     "https": "168.11.14.250:8009"
 }
 
+global last_update_id
+last_update_id = 0
+
 
 def get_updates():
     url = URL + 'getupdates'
@@ -19,13 +22,20 @@ def get_updates():
 
 def get_message():
     data = get_updates()
-    chat_id = data['result'][-1]['message']['chat']['id']
-    message_text = data['result'][-1]['message']['text']
+    last_object = data['result'][-1]
+    current_update_id = last_object['update_id']
 
-    messages = {'chat_id': chat_id,
-                'message': message_text}
+    global last_update_id
+    if last_update_id != current_update_id:
+        last_update_id = current_update_id
+        chat_id = last_object['message']['chat']['id']
+        message_text = last_object['message']['text']
 
-    return messages
+        messages = {'chat_id': chat_id,
+                    'message': message_text}
+
+        return messages
+    return None
 
 
 def send_message_to_bot(chat_id, text='Processing'):
@@ -35,19 +45,23 @@ def send_message_to_bot(chat_id, text='Processing'):
 
 def main():
     while True:
-
         answer = get_message()
-        chat_id = answer['chat_id']
-        text = answer['message']
+        if answer != None:
+            chat_id = answer['chat_id']
+            text = answer['message']
 
-        if text == '/btc':
-            send_message_to_bot(chat_id, get_btc())
+            if text == '/btc':
+                send_message_to_bot(chat_id, get_btc())
+
+        else:
+            continue
 
         sleep(3)
 
-    # d = get_updates()
-    # with open('updates.json','w') as file:
-    #     json.dump(d,file,indent=2,ensure_ascii=False)
+
+# d = get_message()
+# with open('updates.json','w') as file:
+#     json.dump(d,file,indent=2,ensure_ascii=False)
 
 
 if __name__ == '__main__':
