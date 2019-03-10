@@ -1,6 +1,8 @@
 from selenium import webdriver
 import time
+from pytesseract import image_to_string
 from PIL import Image
+import base64
 
 browser = webdriver.Chrome(executable_path='/Users/mac/Desktop/webdriver/chromedriver')
 
@@ -13,15 +15,21 @@ class Bot:
     def take_screenshot(self):
         self.driver.save_screenshot('avito_screenshot.png')
 
-    def crop(self, location, size):
-        image = Image.open('avito_screenshot.png')
-        x = location['x']
-        y = location['y']
-        width = size['width']
-        height = size['height']
-        print(x, y, width, height)
+    # def crop(self, location, size):
+    #     image = Image.open('avito_screenshot.png')
+    #     x = location['x']
+    #     y = location['y']
+    #     width = size['width']
+    #     height = size['height']
+    #     print(x, y, width, height)
+    #
+    #     image.crop((x, y, x+width, y+height)).save('tel.gif')
 
-        image.crop((x, y, x + width, y + height)).save('tel.gif')
+    def tel_recon(self):
+        image = Image.open('imageToSave.png')
+        print(image_to_string(image))
+        with open('phones.txt','a') as f:
+            f.write(image_to_string(image)+'\n')
 
     def navigate(self):
         self.driver.get('https://www.avito.ru/moskva/detskaya_odezhda_i_obuv/puhovik_patagonia_m_10_let_945629810')
@@ -32,16 +40,18 @@ class Bot:
         button.click()
         time.sleep(3)
         self.take_screenshot()
-        time.sleep(10)
+        time.sleep(5)
 
-        image = self.driver.find_element_by_xpath('//div[@class="item-phone-big-number js-item-phone-big-number"]//*')
-        location = image.location
-        print('===')
-        print(location)
-        size = image.size
-        print('////')
-        print(size)
-        self.crop(location, size)
+        image = self.driver.find_element_by_xpath('//div[@class="item-phone-big-number js-item-phone-big-number"]/img')
+        image_src = image.get_attribute('src').split(',')[1]
+        img = base64.decodebytes(bytearray(image_src, 'utf-8'))
+        with open("imageToSave.png", "wb") as f:
+            f.write(img)
+
+        time.sleep(3)
+
+        self.tel_recon()
+
         browser.close()
 
 
