@@ -22,10 +22,10 @@ Open a yandex page
     Open Browser    ${url}    ${browser}
 
 Search and check
-#    [Arguments]  ${query}   ${expected result}
-#    Input text  //span[class="input__ahead"]/*   ${query}
-#    Click button    type="submit"    ${query}
-#    Wait until page contains    ${expected result}
+    [Arguments]  ${query}   ${expected result}
+    Input text  //span[class="input__ahead"]/*   ${query}
+    Click button    type="submit"    ${query}
+    Wait until page contains    ${expected result}
 
 
 

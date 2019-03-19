@@ -19,10 +19,6 @@ Valid Login
 
 
 
-
-
-
-
 *** Keywords ***
 Open Browser To Login Page
     Open Browser    ${url}    ${browser}
