@@ -47,10 +47,6 @@ Open a page
 
 Create a dublicate user
 	Click to sign up
-#
-#Logging
-##	Click Link  //*[@href="/users/sign_in"]
-#	Logging in
 
 Log like unique user
 	Logging in
