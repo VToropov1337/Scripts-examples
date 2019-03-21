@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<robot generator="Robot 3.1.1 (Python 3.7.2 on darwin)" generated="20190320 18:33:56.626" rpa="false">
+<suite id="s1" name="Local-Serv2" source="/Users/mac/Desktop/some_stuff/robotframework/local-serv2.robot">
+<kw name="Open Browser" library="SeleniumLibrary" type="setup">
+<doc>Opens a new browser instance to the given ``url``.</doc>
+<arguments>
+<arg>${mainProject}</arg>
+<arg>${browser}</arg>
+</arguments>
+<msg timestamp="20190320 18:33:56.770" level="INFO">Opening browser 'Chrome' to base url 'localhost:3000'.</msg>
+<status status="PASS" starttime="20190320 18:33:56.769" endtime="20190320 18:33:59.469"></status>
+</kw>
+<test id="s1-t1" name="Open a page">
+<kw name="Open a login page">
+<kw name="Maximize Browser Window" library="SeleniumLibrary">
+<doc>Maximizes current browser window.</doc>
+<status status="PASS" starttime="20190320 18:33:59.471" endtime="20190320 18:33:59.615"></status>
+</kw>
+<kw name="Title Should Be" library="SeleniumLibrary">
+<doc>Verifies that current page title equals ``title``.</doc>
+<arguments>
+<arg>Muse</arg>
+</arguments>
+<msg timestamp="20190320 18:33:59.621" level="INFO">Page title is 'Muse'.</msg>
+<status status="PASS" starttime="20190320 18:33:59.616" endtime="20190320 18:33:59.621"></status>
+</kw>
+<status status="PASS" starttime="20190320 18:33:59.471" endtime="20190320 18:33:59.621"></status>
+</kw>
+<status status="PASS" starttime="20190320 18:33:59.470" endtime="20190320 18:33:59.621" critical="yes"></status>
+</test>
+<test id="s1-t2" name="step2">
+<kw name="Click Link" library="SeleniumLibrary">
+<doc>Clicks a link identified by ``locator``.</doc>
+<arguments>
+<arg>//*[@href="/users/sign_in"]</arg>
+</arguments>
+<msg timestamp="20190320 18:33:59.623" level="INFO">Clicking link '//*[@href="/users/sign_in"]'.</msg>
+<status status="PASS" starttime="20190320 18:33:59.622" endtime="20190320 18:33:59.761"></status>
+</kw>
+<kw name="Logging in">
+<kw name="Input Text" library="SeleniumLibrary">
+<doc>Types the given ``text`` into text field identified by ``locator``.</doc>
+<arguments>
+<arg>//*[@id="user_email"]</arg>
+<arg>${email}</arg>
+</arguments>
+<msg timestamp="20190320 18:33:59.762" level="INFO">Typing text 'admin@mail.ru' into text field '//*[@id="user_email"]'.</msg>
+<status status="PASS" starttime="20190320 18:33:59.762" endtime="20190320 18:33:59.888"></status>
+</kw>
+<kw name="Input Text" library="SeleniumLibrary">
+<doc>Types the given ``text`` into text field identified by ``locator``.</doc>
+<arguments>
+<arg>//*[@id="user_password"]</arg>
+<arg>${password}</arg>
+</arguments>
+<msg timestamp="20190320 18:33:59.888" level="INFO">Typing text '123123' into text field '//*[@id="user_password"]'.</msg>
+<status status="PASS" starttime="20190320 18:33:59.888" endtime="20190320 18:33:59.952"></status>
+</kw>
+<kw name="Click Button" library="SeleniumLibrary">
+<doc>Clicks button identified by ``locator``.</doc>
+<arguments>
+<arg>//*[@name="commit"]</arg>
+</arguments>
+<msg timestamp="20190320 18:33:59.952" level="INFO">Clicking button '//*[@name="commit"]'.</msg>
+<status status="PASS" starttime="20190320 18:33:59.952" endtime="20190320 18:34:00.629"></status>
+</kw>
+<status status="PASS" starttime="20190320 18:33:59.761" endtime="20190320 18:34:00.630"></status>
+</kw>
+<kw name="Page Should Contain Element" library="SeleniumLibrary">
+<doc>Verifies that element ``locator`` is found on the current page.</doc>
+<arguments>
+<arg>//*[@id="posts"]</arg>
+</arguments>
+<msg timestamp="20190320 18:34:00.643" level="INFO">Current page contains element '//*[@id="posts"]'.</msg>
+<status status="PASS" starttime="20190320 18:34:00.630" endtime="20190320 18:34:00.643"></status>
+</kw>
+<status status="PASS" starttime="20190320 18:33:59.622" endtime="20190320 18:34:00.643" critical="yes"></status>
+</test>
+<test id="s1-t3" name="For-Loop-In-Range">
+<kw name="Get Selected List Value" library="SeleniumLibrary">
+<doc>Returns value of selected option from selection list ``locator``.</doc>
+<arguments>
+<arg>//*[@id="posts"]/*</arg>
+</arguments>
+<assign>
+<var>@{items}</var>
+</assign>
+<msg timestamp="20190320 18:34:00.686" level="FAIL">List with locator '//*[@id="posts"]/*' not found.</msg>
+<status status="FAIL" starttime="20190320 18:34:00.644" endtime="20190320 18:34:00.686"></status>
+</kw>
+<status status="FAIL" starttime="20190320 18:34:00.644" endtime="20190320 18:34:00.686" critical="yes">List with locator '//*[@id="posts"]/*' not found.</status>
+</test>
+<kw name="Close All Browsers" library="SeleniumLibrary" type="teardown">
+<doc>Closes all open browsers and resets the browser cache.</doc>
+<status status="PASS" starttime="20190320 18:34:00.687" endtime="20190320 18:34:00.755"></status>
+</kw>
+<doc>CRUD-tests</doc>
+<status status="FAIL" starttime="20190320 18:33:56.628" endtime="20190320 18:34:00.755"></status>
+</suite>
+<statistics>
+<total>
+<stat pass="2" fail="1">Critical Tests</stat>
+<stat pass="2" fail="1">All Tests</stat>
+</total>
+<tag>
+</tag>
+<suite>
+<stat pass="2" fail="1" id="s1" name="Local-Serv2">Local-Serv2</stat>
+</suite>
+</statistics>
+<errors>
+</errors>
+</robot>
