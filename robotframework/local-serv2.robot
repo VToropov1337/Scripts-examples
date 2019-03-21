@@ -89,11 +89,3 @@ Like post
 	\  Click Link  //*[@href="/"]
     \  Log To Console    ${i}
     \  Log To Console   ====
-
-
-
-
-
-#//*[@id="post_title"]  hello world!
-#//*[@id="post_link"]  www.ya.ru
-#//*[@id="post_description"]  lorem ipsum
