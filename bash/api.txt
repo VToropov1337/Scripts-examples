@@ -1,0 +1,4 @@
+тест на доступность среда, 27 марта 2019 г. 11:48:51 (MSK)
+https://www.google.com, response is 200, среда, 27 марта 2019 г. 11:48:52 (MSK)
+https://www.mail.ru, response is 200, среда, 27 марта 2019 г. 11:48:53 (MSK)
+https://www.yandex.ru, response is 200, среда, 27 марта 2019 г. 11:48:55 (MSK)
