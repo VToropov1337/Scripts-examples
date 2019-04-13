@@ -23,17 +23,17 @@ class BaseCar(object):
 class Car(BaseCar):
     def __init__(self, car_type,brand, photo_file_name, carrying, passenger_seats_count):
         super().__init__(car_type,brand,photo_file_name,carrying)
-        self.passenger_seats_count = passenger_seats_count
+        self.passenger_seats_count = int(passenger_seats_count)
     
     
 class Truck(BaseCar):
-    def __init__(self,car_type, brand, photo_file_name, carrying, body_whl=0):
+    def __init__(self,car_type, brand, photo_file_name, carrying, body_whl=None):
         super().__init__(car_type,brand,photo_file_name,carrying)
-        self.body_whl = 0 or body_whl
-        if body_whl != 0:
-            self.body_width = int(self.body_whl.split('x')[0])
-            self.body_height = int(self.body_whl.split('x')[1])
-            self.body_lenght = int(self.body_whl.split('x')[2])
+        self.body_whl = body_whl or 0
+        if len(body_whl) != 0:
+            self.body_width = float(body_whl.split('x')[0])
+            self.body_height = float(body_whl.split('x')[1])
+            self.body_lenght = float(body_whl.split('x')[2])
         else:
             self.body_width = 0
             self.body_height = 0
@@ -41,21 +41,23 @@ class Truck(BaseCar):
 
                 
     def get_body_volume(self):
-        sum = 1
-        data = self.body_whl.split('x')
-        
-        for i in range(len(data)):
-            data[i] = int(data[i])
-            sum = sum * int(data[i])
-            
-        return sum
+        if self.body_whl != 0:
+            sum = 1
+            data = self.body_whl.split('x')
+
+            for i in range(len(data)):
+                data[i] = float(data[i])
+                sum = sum * float(data[i])
+            return sum
+        else:
+            return 0
         
             
 class SpecMachine(BaseCar):
     def __init__(self, car_type,brand, photo_file_name, carrying, extra):
         super().__init__(car_type,brand,photo_file_name,carrying)
         self.extra = extra
-        
+
 
 def get_car_list(csv_filename):
     car_list = []
@@ -68,9 +70,9 @@ def get_car_list(csv_filename):
             else:
                 row = row[0].split(';')
                 if row[0] == 'car':
-                    car_list.append(Car(row[0],row[1],row[2],row[5],row[3]))
+                    car_list.append(Car(row[0],row[1],row[3],row[5],row[2]))
                 if row[0] == 'truck':
-                    car_list.append(Truck(row[0],row[1],row[3],row[5]))
+                    car_list.append(Truck(row[0],row[1],row[3],row[5],row[4]))
                 if row[0] == 'spec_machine':
                     car_list.append(SpecMachine(row[0],row[1],row[3],row[5],row[6]))
 
