@@ -62,7 +62,6 @@ def get_car_list(csv_filename):
     with open(csv_filename,'r',newline="") as f:
         reader = csv.reader(f)
         next(reader)
-        # a = a[0].split(';')
         for row in reader:
             if len(row) == 0:
                 continue
