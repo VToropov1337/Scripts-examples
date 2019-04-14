@@ -27,7 +27,6 @@ def download_video(link):
 
 
 if __name__ == '__main__':
-	location_to_download = 'path/to/dir'
 	a = get_links(get_html('https://www.youtube.com/playlist?list=***'))
 	with Pool(26) as pool:
 		pool.map(download_video,a)
