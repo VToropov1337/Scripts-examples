@@ -7,13 +7,11 @@ URLS = {
 	}
 
 
-
 def parse_request(request):
 	parsed = request.split(' ')
 	method = parsed[0]
 	url = parsed[1]
 	return (method, url)
-
 
 
 def generate_headers(method, url):
@@ -34,17 +32,12 @@ def generate_content(code, url):
 	return '<h1>{}</h1>'.format(URLS[url])
 
 
-
 def generate_response(request):
 	method, url = parse_request(request)
 	headers, code = generate_headers(method, url)
 	body = generate_content(code, url)
 
 	return (headers + body).encode()
-
-
-
-
 
 
 def run():
@@ -66,11 +59,6 @@ def run():
 
 		client_socket.sendall(response)
 		client_socket.close()
-
-
-
-
-
 
 
 if __name__ == '__main__':
