@@ -12,7 +12,8 @@ class Test_android_kassa:
         """
         desired_cap = {
             "platformName": "Android",
-            "deviceName": "Pixel_3_API_24",
+            "platformVersion": "7.0",
+            "deviceName": "emulator-5554",
             "app": "/Users/mac/Desktop/rambler/касса.apk",
             "automationName": "uiautomator2",
             "appPackage": "ru.rambler.kassa",
