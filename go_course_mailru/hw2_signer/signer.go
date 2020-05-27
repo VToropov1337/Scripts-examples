@@ -1,90 +1,70 @@
 package main
 
-func SingleHash(strs ...string) <-chan interface{} {
-	out := make(chan interface{})
-	go func() {
-		for _, v := range strs {
-			out <- v
-		}
-		close(out)
-	}()
+import (
+	"fmt"
+	"runtime"
+)
 
-	return out
-
-}
-
-func SingleHashJob(in <-chan interface{}) <-chan interface{} {
-	out := make(chan interface{})
-	go func() {
-		for v := range in {
-			str, ok := v.(string)
-			if !ok {
-				return
-			}
-			res := DataSignerCrc32(str) + "~" + DataSignerCrc32(DataSignerMd5(str))
-			out <- res
-		}
-		close(out)
-	}()
-	return out
-
-}
-
-func MultiHash(in <-chan interface{}) <-chan interface{} {
-	out := make(chan interface{})
-	go func() {
-		for v := range in {
-			str, ok := v.(string)
-			if !ok {
-				return
-			}
-			res := MultiHashJob(str)
-
-			out <- res
-		}
-		close(out)
-	}()
-
-	return out
-
-}
-
-func MultiHashJob(v string) string {
-	arr := make([]string, 6)
-	for i := 0; i < 6; i++ {
-		v := DataSignerCrc32(strconv.Itoa(i) + v)
-		arr = append(arr, v)
+func ExecutePipeline(hashSignJobs ...job) {
+	in := make(chan interface{}) //
+	for _, Job := range hashSignJobs {
+		out := make(chan interface{})
+		go Worker(Job, in, out)
+		in = out
+		fmt.Println("------------>", runtime.NumGoroutine())
 	}
-	result := ""
-	for _, v := range arr {
-		result = result + v
-	}
-	// out <- result
-	return result
+}
+
+func Worker(Job job, in, out chan interface{}) {
+	Job(in, out)
 
 }
 
-func CombineResults(in <-chan interface{}) string {
-	result := ""
-	var arr []string
+func SingleHash(in, out chan interface{}) {
 
-	for v := range in {
-		str, ok := v.(string)
-		if !ok {
-			return ""
-		}
-		arr = append(arr, str)
+	for val := range in {
+		fmt.Println("---->", val)
+		data := fmt.Sprintf("%v", val)
+		crcMd5 := DataSignerMd5(data)
+		go SingleHashJob(data, crcMd5, out)
 	}
-	result = strings.Join(arr, "_")
+}
 
-	return result
+func SingleHashJob(data string, md5 string, out chan interface{}) {
+
+	res := DataSignerCrc32(data) + "~" + DataSignerCrc32(md5)
+	out <- res
+
 }
 
 func main() {
-	arr := []string{"0", "1"}
-	a := SingleHash(arr...)
-	b := SingleHashJob(a)
-	c := MultiHash(b)
-	d := CombineResults(c)
-	fmt.Println(d)
+	inputData := []string{"0", "1"}
+	hashSignJobs := []job{
+		job(func(in, out chan interface{}) {
+			for _, fibNum := range inputData {
+				out <- fibNum
+			}
+		}),
+		job(SingleHash),
+		job(func(in, out chan interface{}) {
+			for v := range in {
+				dataRaw := v
+				data, ok := dataRaw.(string)
+				if !ok {
+					fmt.Println("cant convert result data to string")
+				}
+				fmt.Println(data)
+
+			}
+			// dataRaw := <-in
+			// data, ok := dataRaw.(string)
+			// if !ok {
+			// 	fmt.Println("cant convert result data to string")
+			// }
+			// fmt.Println(data)
+		}),
+	}
+	ExecutePipeline(hashSignJobs...)
+	fmt.Scanln()
+
 }
