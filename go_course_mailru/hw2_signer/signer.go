@@ -3,10 +3,14 @@ package main
 import (
 	"fmt"
 	"runtime"
+	"sort"
+	"strconv"
+	"strings"
+	"sync"
 )
 
 func ExecutePipeline(hashSignJobs ...job) {
-	in := make(chan interface{}) //
+	in := make(chan interface{}) // можно забить
 	var wgexec sync.WaitGroup
 
 	for _, Job := range hashSignJobs {
@@ -15,9 +19,7 @@ func ExecutePipeline(hashSignJobs ...job) {
 		wgexec.Add(1)
 		go Worker(&wgexec, Job, in, out)
 		in = out
-		fmt.Println("------------>", runtime.NumGoroutine())
 	}
-	fmt.Println(wgexec, "+++++")
 	wgexec.Wait()
 }
 
@@ -28,10 +30,15 @@ func Worker(wgexec *sync.WaitGroup, Job job, in, out chan interface{}) {
 
 }
 
+func Md5(wg *sync.WaitGroup, data string) string {
+	defer wg.Done()
+	r := DataSignerMd5(data)
+	return r
+}
+
 func SingleHash(in, out chan interface{}) {
 	var wg sync.WaitGroup
 	for val := range in {
-		fmt.Println("---->", val)
 		data := fmt.Sprintf("%v", val)
 		crcMd5 := DataSignerMd5(data)
 		wg.Add(1)
@@ -43,8 +50,22 @@ func SingleHash(in, out chan interface{}) {
 func SingleHashJob(wg *sync.WaitGroup, data string, md5 string, out chan interface{}) {
 	defer wg.Done()
 	fmt.Println("shj", data)
-	res := DataSignerCrc32(data) + "~" + DataSignerCrc32(md5)
-	out <- res
+	crc32Chan := make(chan string)
+	Md5Chan := make(chan string)
+
+	go func(c chan string, v string) {
+		r := DataSignerCrc32(v)
+		c <- r
+	}(crc32Chan, data)
+
+	go func(c chan string, v string) {
+		r := DataSignerCrc32(v)
+		c <- r
+	}(Md5Chan, md5)
+
+	crc32DataHash := <-crc32Chan
+	Md5DataHash := <-Md5Chan
+	out <- crc32DataHash + "~" + Md5DataHash
 
 }
 
@@ -63,16 +84,19 @@ func MultiHash(in, out chan interface{}) {
 
 func MultiHashJob(wgm *sync.WaitGroup, out chan interface{}, value string) {
 	defer wgm.Done()
+	var wgMulti sync.WaitGroup
 	arr := make([]string, 6)
 	for i := 0; i < 6; i++ {
 		fmt.Println("mhj", value)
-		v := DataSignerCrc32(strconv.Itoa(i) + value)
-		arr = append(arr, v)
+		wgMulti.Add(1)
+		go func(wg *sync.WaitGroup, value string, i int, arr *[]string) {
+			v := DataSignerCrc32(strconv.Itoa(i) + value)
+			(*arr)[i] = v
+			wg.Done()
+		}(&wgMulti, value, i, &arr)
 	}
-	result := ""
-	for _, v := range arr {
-		result = result + v
-	}
+	wgMulti.Wait()
+	result := strings.Join(arr, "")
 	out <- result
 
 }
@@ -86,39 +110,10 @@ func CombineResults(in, out chan interface{}) {
 		}
 
 		arr = append(arr, str)
-		fmt.Println("com", arr)
-		fmt.Println("======>", runtime.NumGoroutine())
+		fmt.Println("com", "======>", runtime.NumGoroutine())
 	}
+	sort.Strings(arr)
 	result := strings.Join(arr, "_")
 	fmt.Println(result)
 	out <- result
-}
-
-func main() {
-	inputData := []string{"0", "1"}
-	hashSignJobs := []job{
-		job(func(in, out chan interface{}) {
-			for _, fibNum := range inputData {
-				out <- fibNum
-			}
-		}),
-		job(SingleHash),
-		job(MultiHash),
-		job(CombineResults),
-		job(func(in, out chan interface{}) {
-			fmt.Println("=-=-=-=-=-=", runtime.NumGoroutine())
-			for v := range in {
-				dataRaw := v
-				data, ok := dataRaw.(string)
-				if !ok {
-					fmt.Println("cant convert result data to string")
-				}
-				fmt.Println("*", data)
-			}
-		}),
-	}
-
-	ExecutePipeline(hashSignJobs...)
-	fmt.Println("======>", runtime.NumGoroutine())
-
 }
